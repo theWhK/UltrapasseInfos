@@ -7,7 +7,7 @@ def esc(code):
 print(esc('31;1;4') + 'Informações Consolidadas do Ultrapasse' + esc(0))
 
 # Pergunta se deseja filtrar por data
-gonna_filter_data = input('Deseja filtrar por data? (S/N) ').upper()
+gonna_filter_data = input('Deseja filtrar por data? (S/N) ').upper() or 'N'
 
 # Se for filtrar por data, pergunta qual a data inicial e final
 if gonna_filter_data == 'S':
