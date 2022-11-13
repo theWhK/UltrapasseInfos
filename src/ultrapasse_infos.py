@@ -1,8 +1,29 @@
 import csv
+from datetime import datetime
 
-print('Informações Consolidadas do Ultrapasse:')
+def esc(code):
+    return f'\033[{code}m'
 
-with open('./../data/in/Extrato Ultrapasse.csv', 'r') as csv_file:
+print(esc('31;1;4') + 'Informações Consolidadas do Ultrapasse' + esc(0))
+
+# Pergunta se deseja filtrar por data
+gonna_filter_data = input('Deseja filtrar por data? (S/N) ').upper()
+
+# Se for filtrar por data, pergunta qual a data inicial e final
+if gonna_filter_data == 'S':
+    date_initial = input('Data inicial (dd/mm/aaaa): ')
+    date_initial = datetime.strptime(date_initial, '%d/%m/%Y')
+    date_final = input('Data final (dd/mm/aaaa): ')
+    date_final = datetime.strptime(date_final, '%d/%m/%Y')
+
+# Pergunta se deseja filtrar por placa
+gonna_filter_plate = input('Deseja filtrar por placa? (S/N) ').upper()
+
+# Se for filtrar por placa, pergunta qual a placa
+if gonna_filter_plate == 'S':
+    plate = input('Placa: ')
+
+with open('./../data/in/Extrato Ultrapasse.csv', encoding="utf8", mode='r') as csv_file:
     # Lê o arquivo
     csv_reader = csv.reader(csv_file, delimiter=',')
 
@@ -22,13 +43,30 @@ with open('./../data/in/Extrato Ultrapasse.csv', 'r') as csv_file:
         # Pega a placa
         plate = row[0]
 
-        # Verifica se a placa já está no dicionário
-        if plate not in plate_dict:
-            # Se não estiver, adiciona a placa
-            plate_dict[plate] = 0
+        # Pega a data
+        date = datetime.strptime(row[4], '%d-%m-%Y')
 
-        # Soma o valor do pedágio
-        plate_dict[plate] += float(row[8].replace(",", "."))
+        # Sinalização se haverá ou não a inclusão da linha
+        include = True
+
+        # Se for filtrar por data, verifica se a data está dentro do intervalo
+        if gonna_filter_data == 'S':
+            if date < date_initial or date > date_final:
+                include = False
+
+        # Se for filtrar por placa, verifica se a placa é a mesma
+        if gonna_filter_plate == 'S':
+            if plate != plate:
+                include = False
+
+        if include:
+            # Verifica se a placa já está no dicionário
+            if plate not in plate_dict:
+                # Se não estiver, adiciona a placa
+                plate_dict[plate] = 0
+
+            # Soma o valor do pedágio
+            plate_dict[plate] += float(row[8].replace(",", "."))
 
         # Incrementa a contagem de linhas
         line_count += 1
