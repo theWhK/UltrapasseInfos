@@ -21,7 +21,9 @@ gonna_filter_plate = input('Deseja filtrar por placa? (S/N) ').upper()
 
 # Se for filtrar por placa, pergunta qual a placa
 if gonna_filter_plate == 'S':
-    plate = input('Placa: ')
+    desired_plate = input('Placa: ')
+
+print('===============================')
 
 with open('./../data/in/Extrato Ultrapasse.csv', encoding="utf8", mode='r') as csv_file:
     # Lê o arquivo
@@ -51,12 +53,12 @@ with open('./../data/in/Extrato Ultrapasse.csv', encoding="utf8", mode='r') as c
 
         # Se for filtrar por data, verifica se a data está dentro do intervalo
         if gonna_filter_data == 'S':
-            if date < date_initial or date > date_final:
+            if date <= date_initial or date >= date_final:
                 include = False
 
         # Se for filtrar por placa, verifica se a placa é a mesma
         if gonna_filter_plate == 'S':
-            if plate != plate:
+            if plate != desired_plate:
                 include = False
 
         if include:
