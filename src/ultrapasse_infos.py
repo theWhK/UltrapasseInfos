@@ -21,7 +21,8 @@ gonna_filter_plate = input('Deseja filtrar por placa? (S/N) ').upper()
 
 # Se for filtrar por placa, pergunta qual a placa
 if gonna_filter_plate == 'S':
-    desired_plate = input('Placa: ')
+    desired_plates = input('Placa(s), separadas por ponto-e-vírgula: ').split(';')
+    print(desired_plates)
 
 print('===============================')
 
@@ -58,7 +59,7 @@ with open('./../data/in/Extrato Ultrapasse.csv', encoding="utf8", mode='r') as c
 
         # Se for filtrar por placa, verifica se a placa é a mesma
         if gonna_filter_plate == 'S':
-            if plate != desired_plate:
+            if plate not in desired_plates:
                 include = False
 
         if include:
@@ -73,6 +74,13 @@ with open('./../data/in/Extrato Ultrapasse.csv', encoding="utf8", mode='r') as c
         # Incrementa a contagem de linhas
         line_count += 1
 
+    # Abre a variável do valor total
+    totalCost = 0.0
+
     # Imprime cada linha
     for key, value in plate_dict.items():
         print(f'Placa: {key} - Valor: R$ {round(value, 2)}')
+        totalCost += round(value, 2)
+
+    # Imprime o total
+    print(f'Total: R$ {round(totalCost, 2)}')
